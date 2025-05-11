@@ -54,4 +54,5 @@ Penggunaan AJAX dalam Program:
   - Jika user mengkonfirmasi, AJAX request dikirim ke server
   - Jika berhasil, baris dihapus dari tabel tanpa reload halaman
 
-
+# Dokumentasi
+![image](https://github.com/user-attachments/assets/ab6ab06f-ce9d-4458-9875-641cb2a2323d)
