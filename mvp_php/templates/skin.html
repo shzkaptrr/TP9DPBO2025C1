@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome untuk ikon -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  
+  <title>Sistem Informasi Mahasiswa</title>
+  
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #2ecc71;
+      --light-bg: #f8f9fa;
+      --dark-text: #343a40;
+      --danger-color: #e74c3c;
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .page-header {
+      background: var(--light-bg);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-action {
+      border-radius: 50px;
+      padding: 0.375rem 1.5rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-primary {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .btn-success {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
+    }
+    
+    .table {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .table thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-floating {
+      margin-bottom: 1rem;
+    }
+    
+    .form-control:focus {
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+    
+    /* Animasi untuk form */
+    #formTambah {
+      transition: all 0.3s ease;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+    }
+    
+    #formTambah.show {
+      max-height: 1000px;
+      opacity: 1;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Badge untuk status */
+    .gender-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .male {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .female {
+      background-color: #e83e8c;
+      color: white;
+    }
+    
+    /* Untuk pagination */
+    .pagination .page-item.active .page-link {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .pagination .page-link {
+      color: var(--secondary-color);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-graduation-cap me-2"></i>
+        Sistem Informasi Mahasiswa
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-users me-1"></i> Mahasiswa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-book me-1"></i> Kelas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-chart-line me-1"></i> Laporan</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h2 class="mb-0"><i class="fas fa-users me-2"></i>Data Mahasiswa</h2>
+          <p class="text-muted">Kelola data seluruh mahasiswa</p>
+        </div>
+        <div class="col-lg-6 text-lg-end">
+          <button class="btn btn-success btn-action" onclick="toggleForm()">
+            <i class="fas fa-plus-circle me-1"></i> Tambah Mahasiswa
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Cari mahasiswa..." id="searchInput">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="filterGender">
+              <option value="">Semua Gender</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="sortOption">
+              <option value="nama_asc">Nama (A-Z)</option>
+              <option value="nama_desc">Nama (Z-A)</option>
+              <option value="nim_asc">NIM (Terkecil)</option>
+              <option value="nim_desc">NIM (Terbesar)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Tambah Data -->
+    <div class="card mb-4" id="formTambah">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Tambah Mahasiswa Baru</h5>
+      </div>
+      <div class="card-body">
+        <form action="index.php?action=add" method="POST" id="formMahasiswa">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="text" name="nim" class="form-control" id="nim" placeholder="NIM" required>
+                <label for="nim">NIM</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="text" name="nama" class="form-control" id="nama" placeholder="Nama Lengkap" required>
+                <label for="nama">Nama Lengkap</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="text" name="tempat" class="form-control" id="tempat" placeholder="Tempat Lahir" required>
+                <label for="tempat">Tempat Lahir</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="date" name="tl" class="form-control" id="tl" required>
+                <label for="tl">Tanggal Lahir</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating mb-3">
+                <select name="gender" class="form-select" id="gender" required>
+                  <option value="">Pilih Gender</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
+                <label for="gender">Gender</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating mb-3">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                <label for="email">Email</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating mb-3">
+                <input type="tel" name="telp" class="form-control" id="telp" placeholder="No. Telepon" required>
+                <label for="telp">No. Telepon</label>
+              </div>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="button" class="btn btn-secondary btn-action me-2" onclick="toggleForm()">
+              <i class="fas fa-times me-1"></i> Batal
+            </button>
+            <button type="submit" class="btn btn-success btn-action">
+              <i class="fas fa-save me-1"></i> Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabel Data Mahasiswa -->
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="fas fa-table me-2"></i>Daftar Mahasiswa</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped mb-0">
+            <thead>
+              <tr>
+                <th scope="col" class="text-center">NO</th>
+                <th scope="col">NIM</th>
+                <th scope="col">NAMA</th>
+                <th scope="col">TEMPAT, TGL LAHIR</th>
+                <th scope="col" class="text-center">GENDER</th>
+                <th scope="col">KONTAK</th>
+                <th scope="col" class="text-center">AKSI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data Mahasiswa akan ditampilkan disini -->
+              <tr data-id="1">
+                <td class="text-center">1</td>
+                <td>123456789</td>
+                <td>Ahmad Fauzi</td>
+                <td>Jakarta, 1998-05-15</td>
+                <td class="text-center">
+                  <span class="gender-badge male">Laki-laki</span>
+                </td>
+                <td>
+                  <div><i class="fas fa-envelope me-1"></i> ahmad@example.com</div>
+                  <div><i class="fas fa-phone me-1"></i> 081234567890</div>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-primary btn-edit me-1" data-bs-toggle="tooltip" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger btn-delete" data-bs-toggle="tooltip" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr data-id="2">
+                <td class="text-center">2</td>
+                <td>987654321</td>
+                <td>Siti Aisyah</td>
+                <td>Bandung, 1999-08-21</td>
+                <td class="text-center">
+                  <span class="gender-badge female">Perempuan</span>
+                </td>
+                <td>
+                  <div><i class="fas fa-envelope me-1"></i> siti@example.com</div>
+                  <div><i class="fas fa-phone me-1"></i> 089876543210</div>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-primary btn-edit me-1" data-bs-toggle="tooltip" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger btn-delete" data-bs-toggle="tooltip" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer bg-white">
+        <div class="row align-items-center">
+          <div class="col-md-6 small text-muted">
+            Menampilkan 2 dari 2 mahasiswa
+          </div>
+          <div class="col-md-6">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-end mb-0">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Mahasiswa -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editModalLabel"><i class="fas fa-user-edit me-2"></i>Edit Data Mahasiswa</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editForm">
+            <input type="hidden" id="edit_id">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" id="edit_nim" class="form-control" placeholder="NIM" required>
+                  <label for="edit_nim">NIM</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" id="edit_nama" class="form-control" placeholder="Nama Lengkap" required>
+                  <label for="edit_nama">Nama Lengkap</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" id="edit_tempat" class="form-control" placeholder="Tempat Lahir" required>
+                  <label for="edit_tempat">Tempat Lahir</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="date" id="edit_tl" class="form-control" required>
+                  <label for="edit_tl">Tanggal Lahir</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <select id="edit_gender" class="form-select" required>
+                    <option value="">Pilih Gender</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                  <label for="edit_gender">Gender</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input type="email" id="edit_email" class="form-control" placeholder="Email" required>
+                  <label for="edit_email">Email</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input type="tel" id="edit_telp" class="form-control" placeholder="No. Telepon" required>
+                  <label for="edit_telp">No. Telepon</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary" id="saveEdit">Simpan Perubahan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-exclamation-triangle me-2"></i>Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Anda yakin ingin menghapus data mahasiswa <strong id="deleteStudentName">Nama Mahasiswa</strong>?</p>
+          <p class="text-danger mb-0"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Toggle Form Tambah
+    function toggleForm() {
+      const form = document.getElementById("formTambah");
+      form.classList.toggle("show");
+    }
+
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tooltips
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+      
+      // Setup Edit Buttons
+      setupActionButtons();
+    });
+
+    function setupActionButtons() {
+      // Edit buttons
+      document.querySelectorAll('.btn-edit').forEach(button => {
+        button.addEventListener('click', function() {
+          const row = this.closest('tr');
+          openEditModal(row);
+        });
+      });
+      
+      // Delete buttons
+      document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+          const row = this.closest('tr');
+          const name = row.cells[2].textContent;
+          openDeleteModal(row.getAttribute('data-id'), name);
+        });
+      });
+    }
+    
+    function openEditModal(row) {
+      const id = row.getAttribute('data-id');
+      const cells = row.querySelectorAll('td');
+      
+      // Extract data from table row
+      const nim = cells[1].textContent;
+      const nama = cells[2].textContent;
+      
+      // Extract tempat and tanggal lahir
+      const ttlText = cells[3].textContent;
+      const ttlParts = ttlText.split(', ');
+      const tempat = ttlParts[0];
+      let tanggal = '';
+      if (ttlParts.length > 1) {
+        tanggal = ttlParts[1];
+      }
+      
+      // Get gender
+      const gender = cells[4].querySelector('.gender-badge').textContent;
+      
+      // Extract email and phone
+      const contactInfo = cells[5].querySelectorAll('div');
+      const email = contactInfo[0].textContent.replace('✉️ ', '');
+      const telp = contactInfo[1].textContent.replace('📞 ', '');
+      
+      // Fill the edit form
+      document.getElementById('edit_id').value = id;
+      document.getElementById('edit_nim').value = nim;
+      document.getElementById('edit_nama').value = nama;
+      document.getElementById('edit_tempat').value = tempat;
+      document.getElementById('edit_tl').value = tanggal;
+      document.getElementById('edit_gender').value = gender;
+      document.getElementById('edit_email').value = email;
+      document.getElementById('edit_telp').value = telp;
+      
+      // Show the modal
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+      editModal.show();
+    }
+    
+    function openDeleteModal(id, name) {
+      document.getElementById('deleteStudentName').textContent = name;
+      
+      // Set up the confirm delete button
+      document.getElementById('confirmDelete').onclick = function() {
+        deleteStudent(id);
+      };
+      
+      // Show the modal
+      const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+      deleteModal.show();
+    }
+    
+    async function deleteStudent(id) {
+      try {
+        const response = await fetch(`index.php?action=delete&id=${id}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error("Gagal menghapus data");
+        
+        // Reload the page or remove the row from the table
+        document.querySelector(`tr[data-id="${id}"]`).remove();
+        
+        // Hide the modal
+        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+        deleteModal.hide();
+        
+        // Show success message
+        alert("Data berhasil dihapus!");
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Gagal menghapus data: " + error.message);
+      }
+    }
+    
+    // Handle form submission for edit
+    document.getElementById('saveEdit').addEventListener('click', async function() {
+      const id = document.getElementById('edit_id').value;
+      const nim = document.getElementById('edit_nim').value;
+      const nama = document.getElementById('edit_nama').value;
+      const tempat = document.getElementById('edit_tempat').value;
+      const tl = document.getElementById('edit_tl').value;
+      const gender = document.getElementById('edit_gender').value;
+      const email = document.getElementById('edit_email').value;
+      const telp = document.getElementById('edit_telp').value;
+      
+      const data = {
+        id: id,
+        nim: nim,
+        nama: nama,
+        tempat: tempat,
+        tl: tl,
+        gender: gender,
+        email: email,
+        telp: telp
+      };
+      
+      try {
+        const response = await fetch('index.php?action=update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) throw new Error("Gagal menyimpan perubahan");
+        
+        // Update the table row without reloading
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        if (row) {
+          const cells = row.querySelectorAll('td');
+          cells[1].textContent = nim;
+          cells[2].textContent = nama;
+          cells[3].textContent = `${tempat}, ${tl}`;
+          
+          // Update gender badge
+          const genderBadge = cells[4].querySelector('.gender-badge');
+          genderBadge.textContent = gender;
+          genderBadge.className = 'gender-badge ' + (gender === 'Laki-laki' ? 'male' : 'female');
+          
+          // Update contact info
+          const contactInfo = cells[5].querySelectorAll('div');
+          contactInfo[0].innerHTML = `<i class="fas fa-envelope me-1"></i> ${email}`;
+          contactInfo[1].innerHTML = `<i class="fas fa-phone me-1"></i> ${telp}`;
+        }
+        
+        // Hide the modal
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+        editModal.hide();
+        
+        // Show success message
+        alert("Data berhasil diperbarui!");
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Gagal memperbarui data: " + error.message);
+      }
+    });
+    
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchText = this.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      
+      rows.forEach(row => {
+        const nim = row.cells[1].textContent.toLowerCase();
+        const nama = row.cells[2].textContent.toLowerCase();
+        const ttl = row.cells[3].textContent.toLowerCase();
+        const email = row.cells[5].textContent.toLowerCase();
+        
+        if (nim.includes(searchText) || nama.includes(searchText) || 
+            ttl.includes(searchText) || email.includes(searchText)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+    
+    // Filter by gender
+    document.getElementById('filterGender').addEventListener('change', function() {
+      const gender = this.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      
+      if (!gender) {
+        rows.forEach(row => row.style.display = '');
+        return;
+      }
+      
+      rows.forEach(row => {
+        const rowGender = row.cells[4].textContent.trim().toLowerCase();
+        row.style.display = rowGender.includes(gender) ? '' : 'none';
+      });
+    });
+    
+    // Sort functionality
+    document.getElementById('sortOption').addEventListener('change', function() {
+      const sortBy = this.value;
+      const tbody = document.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      
+      rows.sort((a, b) => {
+        let valueA, valueB;
+        
+        if (sortBy.startsWith('nama')) {
+          valueA = a.cells[2].textContent.trim();
+          valueB = b.cells[2].textContent.trim();
+        } else {
+          valueA = a.cells[1].textContent.trim();
+          valueB = b.cells[1].textContent.trim();
+        }
+        
+        if (sortBy.endsWith('asc')) {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
+      });
+      
+      // Clear and refill table body
+      while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+      }
+      
+      rows.forEach(row => tbody.appendChild(row));
+    });
+  </script>
+</body>
+
+</html>
